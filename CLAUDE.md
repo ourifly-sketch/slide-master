@@ -51,6 +51,14 @@ re-architectable source. Do not load either full owner before that answer.
 - Stack: `Pretendard, "Malgun Gothic", sans-serif`; intermediate weights use installed family names (`"Pretendard Medium"`, `"Pretendard SemiBold"`, etc.).
 - Font files are bundled at [`.claude/skills/ppt-master/assets/fonts/Pretendard/`](.claude/skills/ppt-master/assets/fonts/Pretendard/) (SIL OFL) and installed user-level on this machine. PPTX does not embed fonts — decks shared to other machines need Pretendard installed there.
 
+## Owner Defaults (install-local, standing preference)
+
+This fork belongs to 김은영 (키세스 대표, 서울벤처대학원대학교 겸임교수). Her personal brand is **브랜영** — never label her or her character as "Dr.goods" / "Dr. Goods Nikey" / "닥터굿즈" (retired names).
+
+- **Brand**: her lecture / GGMA decks use the brand workspace [`templates/brands/branyoung/`](.claude/skills/ppt-master/templates/brands/branyoung/) as the Step 3 explicit path unless she asks for another look.
+- **Speaker notes are always on**: record notes as requested in `design_spec.md §X` for every deck (Korean spoken lecture register), unless she explicitly says to skip them in the current conversation. This overrides the default-off rule in `SKILL.md` Step 6 / `strategist.md` for this install.
+- **Communication**: she is not a developer — explain choices in plain Korean, avoid jargon, and keep confirmations short.
+
 ## Required Conventions
 
 - **Repo-wide style rules** — when editing prompt files under [`.claude/skills/ppt-master/references/`](.claude/skills/ppt-master/references/), Python under [`.claude/skills/ppt-master/scripts/`](.claude/skills/ppt-master/scripts/), or any other code/prose in the repo, follow the matching style rule in [`docs/rules/`](docs/rules/).

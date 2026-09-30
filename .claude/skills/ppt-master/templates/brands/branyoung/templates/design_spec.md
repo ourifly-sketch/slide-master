@@ -1,16 +1,16 @@
 ---
-brand_id: drgoods
+brand_id: branyoung
 kind: brand
-summary: Dr.goods 김은영 강의 아이덴티티 — 굿즈·AI·창업 강의 덱, 흰 배경 큰 글씨 + 빨강/겨자 2색 강조
+summary: 브랜영(김은영 퍼스널브랜드) 강의 아이덴티티 — 굿즈·AI·창업 강의 덱, 흰 배경 큰 글씨 + 빨강/겨자 2색 강조
 keywords: [lecture, korean, goods, minimal, big-type]
 primary_color: "#E8332B"
 ---
 
-# Dr.goods Brand Specification
+# 브랜영 (Branyoung) Brand Specification
 
 > Identity-only preset. No SVG page roster — pages are composed freely under these constraints.
 >
-> **Provenance**: 강사 본인(Dr.goods 김은영, 키세스 대표)이 직접 지정한 디자인 시스템 v2
+> **Provenance**: 강사 본인(브랜영 김은영, 키세스 대표)이 직접 지정한 디자인 시스템 v2
 > (`ourifly-sketch/test1` → `lecture-syllabus/references/design-system.md`)와 강사 철학
 > (`instructor-philosophy.md`)에서 옮겨왔다. 원본을 고치면 이 파일에도 동기화한다.
 
@@ -18,7 +18,7 @@ primary_color: "#E8332B"
 
 | Property | Value |
 |---|---|
-| Brand Name | Dr.goods (Dr. Goods Nikey · 김은영) |
+| Brand Name | 브랜영 (김은영의 퍼스널브랜드). 예전 이름 "Dr.goods / Dr. Goods Nikey / 닥터굿즈"는 더 이상 쓰지 않는다 |
 | Use Cases | 대학원 강의, 소상공인·창업 워크숍, 굿즈마케팅·관광굿즈 교육, GGMA(글로벌굿즈마케팅협회) 발표 |
 | Tone | 재미있고 친근한 실전 강의 — 큰 글씨, 한 슬라이드 한 메시지, 질문으로 시작 |
 
@@ -69,7 +69,8 @@ primary_color: "#E8332B"
 
 ## IV. Logo
 
-- None. 로고 대신 §VII의 캐릭터 Dr. Goods Nikey가 정체성을 담당한다.
+- None. 로고 대신 §VII의 캐릭터 **브랜영**이 정체성을 담당한다.
+- 표지·마무리 바이라인 표기: `브랜영 김은영` (Dr.goods / Dr. Goods Nikey 표기 금지)
 
 ## V. Voice & Tone
 
@@ -94,8 +95,8 @@ primary_color: "#E8332B"
 ## VII. Visual Assets
 
 - Images and illustrations: `../images/`
-  - `dr-goods-nikey-pointing.png` — 가리키는 포즈. 표지, 핵심 메시지 등장 슬라이드
-  - `dr-goods-nikey-confused.png` — 갸웃하는 포즈. 문제 제기 / 질문 슬라이드, Q&A
+  - `branyoung-pointing.png` — 가리키는 포즈. 표지, 핵심 메시지 등장 슬라이드
+  - `branyoung-confused.png` — 갸웃하는 포즈. 문제 제기 / 질문 슬라이드, Q&A
 - Usage: **매 슬라이드에 넣지 않는다.** 표지와 마무리(Q&A) 등 정체성이 필요한 자리에만 크게.
   콘텐츠 슬라이드는 여백을 두려워하지 않는다.
 
@@ -110,10 +111,21 @@ primary_color: "#E8332B"
 - **프로세스** — 테두리 원 + 색 숫자, 가는 연결선
 - 표는 되도록 쓰지 않는다. 꼭 필요하면 셀 배경 없이 가는 구분선만
 
-## IX. Pre-export Checklist
+## IX. Speaker Notes (standing preference — always on)
+
+- **모든 덱에 발표자 노트를 만든다.** 사용자가 "노트 빼줘"라고 명시하지 않는 한 `design_spec.md §X`를
+  `None requested`로 두지 말고 노트를 요청된 상태로 기록한다 (강사 본인 지정, 2026-09-30).
+- 톤: 강사 본인이 그대로 읽어도 되는 구어체 강의 멘트. 질문 던지기 → 사례/숫자 → "그래서 오늘 무엇을
+  만드는가"로 연결. 페이지당 3–6문장.
+- 실습 페이지 노트에는 진행 시간과 강사가 돌아다니며 확인할 포인트를 말로 풀어 넣는다
+  (TTS 규칙상 괄호 태그·"요점:" 목록 금지 — 문장으로 쓴다).
+
+## X. Pre-export Checklist
 
 - [ ] 본문 텍스트 뒤에 색이 채워진 도형이 하나도 없는가
 - [ ] 강조에 `#E8332B`·`#C9A227` 외의 색을 쓰지 않았는가
 - [ ] 본문 22pt 이상, 표지 > 구분 > 핵심 문장 > 본문 위계가 뚜렷한가
 - [ ] 페이지마다 챕터 뱃지/분류 헤더가 없는가 — 슬라이드당 핵심 문장 하나로 시작하는가
 - [ ] 캐릭터가 표지·마무리 등 필요한 자리에만 있는가
+- [ ] 발표자 노트가 모든 페이지에 들어갔는가
+- [ ] 이름 표기가 `브랜영`인가 (Dr.goods 표기 없음)
