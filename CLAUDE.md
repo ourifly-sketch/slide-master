@@ -57,6 +57,7 @@ This fork belongs to 김은영 (키세스 대표, 서울벤처대학원대학교
 
 - **Brand**: her lecture / GGMA decks use the brand workspace [`templates/brands/branyoung/`](.claude/skills/ppt-master/templates/brands/branyoung/) as the Step 3 explicit path unless she asks for another look.
 - **Speaker notes are always on**: record notes as requested in `design_spec.md §X` for every deck (Korean spoken lecture register), unless she explicitly says to skip them in the current conversation. This overrides the default-off rule in `SKILL.md` Step 6 / `strategist.md` for this install.
+- **Export with `--no-merge`**: branyoung pages break big type by hand beside the character and in narrow columns; the default paragraph merge re-flows those lines in PowerPoint (text runs under the character or past the edge). Run Step 7.3 as `svg_to_pptx.py <project> --no-merge` and round-trip check the exported PPTX (`pptx_to_svg.py`) before hand-off.
 - **Communication**: she is not a developer — explain choices in plain Korean, avoid jargon, and keep confirmations short.
 
 ## Required Conventions
