@@ -7,6 +7,10 @@
     "summary": "Apple 계열 모노크롬 미니멀 아이덴티티 — 잉크 단일 시그널, 서피스 반전 강조, 조용한 프리미엄 보이스",
     "primary_color": "#1D1D1F"
   },
+  "drgoods": {
+    "summary": "Dr.goods 김은영 강의 아이덴티티 — 굿즈·AI·창업 강의 덱, 흰 배경 큰 글씨 + 빨강/겨자 2색 강조",
+    "primary_color": "#E8332B"
+  },
   "google": {
     "summary": "Google brand identity — multi-product corporate decks, developer events (Google I/O style), education and training in the Google ecosystem",
     "primary_color": "#4285F4"
