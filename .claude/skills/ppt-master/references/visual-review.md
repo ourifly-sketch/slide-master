@@ -105,7 +105,7 @@ Any check fails → status = `render_failed`, abort without scanning rules.
 
 ### §4.1 Iteration loop
 
-The full loop is defined here but the **default budget is 1 iteration**. Multi-iteration runs require an explicit opt-in in the orchestrator prompt and roughly double render cost per added iteration.
+The full loop is defined here but the **default budget is 1 iteration**. Multi-iteration runs require an explicit opt-in in the batch prompts and roughly double render cost per added iteration.
 
 ```
 iteration 1: scan all Hard + Soft → fix → (re-render only if budget ≥ 2)
@@ -188,16 +188,16 @@ Each subagent writes exactly one file to `<project>/.review/<page>.json`:
 
 ## §6 Dispatch & messaging contract
 
-This rubric is consumed by subagents spawned via the `visual-review` workflow. Mandatory dispatch invariants:
+This rubric is consumed by subagents spawned via the `visual-review` workflow. The orchestrator is the main agent running that workflow. Dispatch invariants:
 
 ### §6.1 Orchestrator → subagent (batched dispatch)
 
-The orchestrator partitions the N pages into `ceil(N/K)` batches of ≤ K pages each (default **K = 5**; configurable per run via the orchestrator prompt) and spawns one subagent per batch.
+The orchestrator partitions the N pages into `ceil(N/K)` batches of ≤ K pages each (default **K = 5**; configurable per run) and spawns one subagent per batch.
 
 - Spawn all batch subagents in **one assistant message** (parallel `Agent` calls). Sequential dispatch breaks pipelining.
 - Each subagent prompt is **self-contained** — no prior conversation context. Inline the absolute paths for §0.1 inputs 1–5 explicitly, plus the full `(svg_path, png_path, page_role)` list for that batch. Do not assume the subagent knows the project root.
 - `subagent_type: general-purpose`. Tool restrictions: Read, Edit, Bash (for `cp` backups), Write (for JSON output). MCP playwright is **not** required by subagents — orchestrator pre-renders PNGs.
-- `name` / `team_name` parameters may be unavailable from nested teammate context. Dispatch must remain functional with anonymous subagents — do not require named addressing.
+- Dispatch works with anonymous subagents — do not require named addressing.
 
 **Why batched, not per-page**: the rubric (~2.5K tokens), `design_spec.md` (~4–5K), and `spec_lock.md` (~1K) are identical inputs across all pages and do **not** share a prompt cache between sibling subagents. A 20-page deck with per-page dispatch re-reads ~150K tokens of fixed documents; batched dispatch with K=5 cuts that by ~75% while staying inside default parallel-subagent limits (~10). Batches also bound failure blast radius — one crashed subagent loses K pages, not the entire run.
 
@@ -210,12 +210,12 @@ Larger K is **not** always better: subagent context fills with prior pages' SVG 
 
 ### §6.2 Subagent → orchestrator
 
-- Subagent's **final action before going idle** must be `SendMessage(to=<lead>)` listing one JSON path per processed page (e.g., `<project>/.review/<page>.json`) and a ≤150-word text summary covering all pages in the batch. Going idle without messaging — or messaging with a partial batch — is a protocol violation.
+- Subagent's **final message** is the batch report: one JSON path per processed page (e.g., `<project>/.review/<page>.json`) and a ≤150-word text summary covering all pages in the batch. A report that covers only part of the batch is a protocol violation.
 - If the subagent aborts mid-batch (rule §4.2 rollback, tool error, etc.), it must still send the batch report covering both completed and aborted pages, with the aborted pages marked `needs_human` or `render_failed` as appropriate.
 
-### §6.3 Orchestrator → main agent
+### §6.3 Orchestrator aggregate
 
-- Orchestrator's **final action before going idle** must be `SendMessage(to=<lead>)` containing:
+- After all batch reports arrive, the orchestrator produces:
   - the aggregate Markdown table (page × status × hard_hits × soft_hits × fixes_applied × needs_human_reason)
   - one ≤150-word "plumbing verdict" paragraph
   - path to `brand_review.json` if any §1.1 aggregations occurred

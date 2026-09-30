@@ -23,8 +23,9 @@ edit the canonical tree, then re-run:
 
 On invocation:
 
-1. Read `.claude/skills/ppt-master/SKILL.md` (repo-root relative) in full and execute it
-   exactly as a runtime procedure.
+1. Read `.claude/skills/ppt-master/workflows/routing.md` (repo-root relative) first;
+   load `.claude/skills/ppt-master/SKILL.md` in full only when routing selects the main SVG
+   family or a workflow hands off to it.
 2. Resolve paths: treat `${SKILL_DIR}` as `.claude/skills/ppt-master`. Bare relative paths
    mentioned inside the skill (`references/...`, `workflows/...`, `scripts/...`,
    `templates/...`) resolve against that directory — never against

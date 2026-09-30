@@ -40,7 +40,7 @@ From `.impeccable.md`: *"Confident restraint. Earn every element. One color acce
 Applied to schematics:
 - Every node represents a distinct idea. Two nodes that always travel together are one node.
 - Every connection carries information. If the relationship is obvious from layout, remove the line.
-- Coral is **editorial, not a flag.** 1–2 focal nodes per diagram. Using it on 5 nodes erases the signal.
+- The accent color (`spec_lock.colors`) is **editorial, not a flag.** 1–2 focal nodes per diagram. Using it on 5 nodes erases the signal.
 - The schematic isn't done when everything is added. It's done when nothing can be removed.
 
 **Target density: 4/10.** Enough to be technically complete. Not so dense it needs a guide. Above 9 nodes, it's probably two diagrams.
@@ -52,7 +52,6 @@ Applied to schematics:
 Use for any of the 14 diagram types (§3) when a reader will learn more from a visual than from prose, a table, or a bulleted list.
 
 **Don't use for:**
-- Quick unicode diagrams → use **wiretext**.
 - Lists of things → table or bullets.
 - Simple before/after → table.
 - One-shape "diagrams" → just write the sentence.
@@ -98,7 +97,7 @@ These mark "AI slop" schematics of any type:
 | Anti-pattern | Why it fails |
 |---|---|
 | Dark mode + cyan/purple glow | Looks "technical" without design decisions |
-| JetBrains Mono as blanket "dev" font | Mono is for *technical* content — ports, commands, URLs. Names go in Geist sans. |
+| Mono as blanket "dev" font | Mono is for *technical* content — ports, commands, URLs. Names go in the `spec_lock.typography` body role (Pretendard on this install). |
 | Identical boxes for every node | Erases hierarchy |
 | Legend floating inside the diagram area | Collides with nodes |
 | Arrow labels with no masking rect | Bleeds through the line |
@@ -106,7 +105,7 @@ These mark "AI slop" schematics of any type:
 | 3 equal-width summary cards as default | Generic grid — vary widths |
 | Shadow on any element | Shadows are out. Borders are in. |
 | `rounded-2xl` on boxes | Max radius 6–10px or none |
-| Coral on every "important" node | Coral is 1–2 editorial accents, not a signaling system |
+| Accent color on every "important" node | The deck's accent token from `spec_lock.colors` is 1–2 editorial accents, not a signaling system |
 
 Type-specific anti-patterns live in each `references/type-*.md`.
 
@@ -137,7 +136,7 @@ Quick check: if a coordinate ends in 1, 2, 3, 5, 6, 7, 9 — fix it.
 |---|---|
 | Max nodes | 9 |
 | Max arrows / transitions | 12 |
-| Max coral elements | 2 |
+| Max accent-color elements | 2 |
 | Max lifelines (sequence) | 5 |
 | Max lanes (swimlane) | 5 |
 | Max items (quadrant) | 12 |
@@ -171,21 +170,19 @@ Run before producing any diagram.
 - [ ] Can I remove any label? (Does color or shape already signal it?)
 
 **Signal:**
-- [ ] Coral used on ≤2 elements? If more, which actually deserve focal status?
+- [ ] Accent token (`spec_lock.colors`) used on ≤2 elements? If more, which actually deserve focal status?
 - [ ] Legend covers every type used — and nothing extra?
 - [ ] Within the type's complexity budget (§7)?
 
 **Technical:**
 - [ ] Arrows drawn before boxes?
-- [ ] Every arrow label has an opaque `fill="#f5f5f5"` rect behind it?
+- [ ] Every arrow label has an opaque rect behind it, filled with the deck's background token from `spec_lock.colors`?
 - [ ] Legend is a horizontal bottom strip, not floating?
 - [ ] No vertical `writing-mode` text?
 - [ ] `viewBox` expanded for the legend strip (~60px)?
 - [ ] Every font size, coord, width, height, gap divisible by 4?
 
 **Typography:**
-- [ ] Human-readable names in Geist sans, not Geist Mono?
-- [ ] Technical sublabels (ports, commands, URLs) in Geist Mono?
-- [ ] Page title in Instrument Serif?
-- [ ] Annotation callouts (if any) in *italic* Instrument Serif? (see [primitive-annotation.md](references/primitive-annotation.md))
-- [ ] No JetBrains Mono anywhere?
+- [ ] Names / labels / title use the `spec_lock.typography` roles (Pretendard on this install), not a mono face?
+- [ ] Technical sublabels (ports, commands, URLs) in the `spec_lock.typography` code role, when the deck declares one?
+- [ ] Annotation callouts (if any) use the locked annotation role? (see [primitive-annotation.md](references/primitive-annotation.md))

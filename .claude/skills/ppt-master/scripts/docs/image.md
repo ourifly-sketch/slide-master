@@ -133,7 +133,7 @@ OPENAI_RESPONSE_FORMAT=omit
 OPENAI_QUALITY=omit
 ```
 
-Use provider-specific keys only (e.g. `GEMINI_API_KEY`, `OPENAI_API_KEY`). See `.env.example` in clone mode or `${SKILL_DIR}/.env.example` in skill-install mode for the full list per backend.
+Use provider-specific keys only (e.g. `GEMINI_API_KEY`, `OPENAI_API_KEY`). Each backend reads its own variables in `scripts/image_backends/backend_<name>.py` (the `*_API_KEY` / `*_MODEL` / `*_BASE_URL` names there are the full list per backend); `codex` needs none (`codex login`).
 
 `IMAGE_API_KEY`, `IMAGE_MODEL`, and `IMAGE_BASE_URL` are intentionally unsupported.
 

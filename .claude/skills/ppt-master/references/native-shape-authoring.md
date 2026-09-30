@@ -98,8 +98,8 @@ and a visible stroke. It exports as an unconnected `p:cxnSp`; a connector
 preset can never be authored as an ordinary `shape`.
 
 **Hard rule — stdout-only exception**: the helper prints one deterministic
-`<g>` fragment. Read that output and insert it with the normal page
-`apply_patch` edit. Do not redirect it into `svg_output/`, loop over pages,
+`<g>` fragment. Read that output and insert it through a normal hand edit of
+the page file (Edit / `apply_patch`, whichever the host provides). Do not redirect it into `svg_output/`, loop over pages,
 batch shapes, or let it choose layout. The main Agent still authors every
 complete SVG page sequentially.
 

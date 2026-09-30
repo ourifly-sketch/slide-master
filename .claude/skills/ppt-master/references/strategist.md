@@ -188,15 +188,19 @@ See [`../templates/icons/README.md`](../templates/icons/README.md) for the curre
 
 ### g. Typography Plan Confirmation (Font + Size)
 
-🚧 **GATE — read the locked style's type character first**: `read_file` the visual-style file locked at §d Layer 2 (`visual-styles/<visual_style>.md`) and pull its **§2 Typography character** (you only read the catalog index there; the per-style character lives in the file). Both combinations below MUST realize it, and the **title carries the personality** — the CJK body may stay a neutral pre-installed sans, but the title leads with the character the style asks for (e.g. `ink-wash` → calligraphic `KaiTi` / `FangSong`; `brutalist` / `memphis` / `vintage-poster` / `zine` → display `SimHei` / `Impact`; `editorial` / `data-journalism` / `photo-editorial` → serif `Georgia` / `Cambria` / `SimSun`; `dark-tech` / `blueprint` → clean sans + `Consolas` mono; `swiss-minimal` / `soft-rounded` → grotesque / friendly sans). For `visual_style: custom`, realize its `visual_style_behavior` character instead. Letting the title default to a neutral sans when the style asks for character is the failure mode to avoid.
+#### Default — Pretendard lock
 
-> **🔒 Install-local font lock — Pretendard (standing user preference on this machine).** Typography is **fixed to the Pretendard family** for every deck. This supersedes the two-combination mandate below: do NOT propose alternative families — present one Pretendard plan (weight roles + size ramp) at the confirmation stage. Deviate only when the user explicitly names another font in the current conversation, or a Step 3 template declares its own stacks (template precedence). Everything below in this section then serves only as background/fallback guidance.
+> **🔒 Install-local font lock — Pretendard (standing user preference on this machine).** Typography is **fixed to the Pretendard family** for every deck: present one Pretendard plan (weight roles + size ramp) at the confirmation stage, not alternative families. The next subsection applies only when the user explicitly names another font in the current conversation, or a Step 3 template declares its own stacks (template precedence).
 > - **Stack**: `Pretendard, "Malgun Gothic", sans-serif` (tail is preview/fallback only; converter exports Pretendard for both Latin and EA slots — it is registered in `DUAL_SCRIPT_FONTS`).
 > - **Weights**: `Pretendard` + `font-weight` covers Regular(400)/Bold(700). Intermediate cuts are separate installed family names — `"Pretendard Light"`, `"Pretendard Medium"`, `"Pretendard SemiBold"`, `"Pretendard ExtraBold"` (author them as the font-family with normal weight).
-> - **Style character (§2 GATE)** is realized through weight span (e.g. ExtraBold title / Light body), size ramp, letter-spacing, casing, and color — never by switching families.
+> - **Style character** — `read_file` the visual-style file locked at §d Layer 2 (`visual-styles/<visual_style>.md`) and pull its **§2 Typography character** (for `visual_style: custom`, its `visual_style_behavior`); realize it through weight span (e.g. ExtraBold title / Light body), size ramp, letter-spacing, casing, and color — never by switching families.
 > - PPT-safe: installed user-level on this machine (all 9 weights); font files bundled at [`../assets/fonts/Pretendard/`](../assets/fonts/Pretendard/) (SIL OFL — free to copy to other machines). PPTX does not embed fonts: recipients without Pretendard fall back, so note "requires Pretendard install" in the Design Spec when the deck will be shared.
 
-#### Font Combinations
+#### When the user names another font or a template declares stacks
+
+> **Template precedence**: when a template was loaded at Step 3 via an explicit path and declares `title` / `body` font stacks in `<project_path>/templates/design_spec.md §III Typography` / §IV (or whichever heading the fused spec uses), lock those directly and skip the candidate presentation. Same precedence as e. — user override > template values.
+
+🚧 **GATE — read the locked style's type character first**: `read_file` the visual-style file locked at §d Layer 2 (`visual-styles/<visual_style>.md`) and pull its **§2 Typography character** (you only read the catalog index there; the per-style character lives in the file). Every candidate below realizes it, and the **title carries the personality** — the CJK body may stay a neutral pre-installed sans, but the title leads with the character the style asks for (e.g. `ink-wash` → calligraphic `KaiTi` / `FangSong`; `brutalist` / `memphis` / `vintage-poster` / `zine` → display `SimHei` / `Impact`; `editorial` / `data-journalism` / `photo-editorial` → serif `Georgia` / `Cambria` / `SimSun`; `dark-tech` / `blueprint` → clean sans + `Consolas` mono; `swiss-minimal` / `soft-rounded` → grotesque / friendly sans). For `visual_style: custom`, realize its `visual_style_behavior` character instead. Letting the title default to a neutral sans when the style asks for character is the failure mode to avoid.
 
 > Same-deck fonts must form **contrast** (different family, weight, or proportion) or **concord** (one family throughout). "Similar but not identical" pairings *across roles* are forbidden — see blacklist below. *Within one stack*, pairing a Windows font with a macOS counterpart (e.g. `Microsoft YaHei` + `PingFang SC`) is a browser-preview nicety; converter writes resolved Latin / EA typefaces into PPTX, not the CSS fallback tail.
 
@@ -218,9 +222,7 @@ See [`../templates/icons/README.md`](../templates/icons/README.md) for the curre
 - `"Times New Roman"` ↔ `Times`
 - `Georgia` ↔ `Cambria`
 
-**Mandatory**: propose **two** combinations to the user — one concord (safe), one contrast (with tension). Do not default to "title = body, same font" without explicit user request. Pick each family by subject fit and the locked `visual_style`'s **§2 character** (read at the GATE above) — there is **no default family**; type should follow the deck's content and aesthetic, not fall back to one safe face.
-
-> **Template precedence**: when a template was loaded at Step 3 via an explicit path and declares `title` / `body` font stacks in `<project_path>/templates/design_spec.md §III Typography` / §IV (or whichever heading the fused spec uses), lock those directly and skip the two-combination presentation. Same precedence as e. — user override > template values.
+**Candidates**: propose **≥3** combinations (the Confirm UI candidate count in §1) — at least one concord (safe) and one contrast (with tension). Do not default to "title = body, same font" without explicit user request. Pick each family by subject fit and the locked `visual_style`'s **§2 character** (read at the GATE above) — on this path there is **no default family**; type should follow the deck's content and aesthetic, not fall back to one safe face.
 
 **Cross-platform pre-installed reference**:
 

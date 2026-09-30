@@ -69,8 +69,7 @@ edit the canonical tree, then re-run:
 
 On invocation:
 
-1. Read `@CANONICAL@/SKILL.md` (repo-root relative) in full and execute it
-   exactly as a runtime procedure.
+@STEP1@
 2. Resolve paths: treat `${SKILL_DIR}` as `@CANONICAL@`. Bare relative paths
    mentioned inside the skill (`references/...`, `workflows/...`, `scripts/...`,
    `templates/...`) resolve against that directory — never against
@@ -78,6 +77,18 @@ On invocation:
 3. Run all commands from the repository root. On Windows installs without
    `python3.exe`, rerun the same command with `python`.
 """
+
+# Default step 1: load the canonical SKILL.md in full.
+DEFAULT_STEP1 = """1. Read `@CANONICAL@/SKILL.md` (repo-root relative) in full and execute it
+   exactly as a runtime procedure."""
+
+# Per-skill step-1 overrides — where the canonical entry is a router, not the
+# full SKILL.md (AGENTS.md / CLAUDE.md "route before full-load").
+STEP1_OVERRIDES = {
+    "ppt-master": """1. Read `@CANONICAL@/workflows/routing.md` (repo-root relative) first;
+   load `@CANONICAL@/SKILL.md` in full only when routing selects the main SVG
+   family or a workflow hands off to it.""",
+}
 
 # Per-skill extra stub paragraphs — only where Codex-side behavior differs
 # from the canonical text.
@@ -122,6 +133,7 @@ def _render_stub(name: str) -> str:
     fm = _select_keys(_extract_frontmatter(SRC / name / "SKILL.md"),
                       FRONTMATTER_KEYS)
     body = (STUB_BODY
+            .replace("@STEP1@", STEP1_OVERRIDES.get(name, DEFAULT_STEP1))
             .replace("@NAME@", name)
             .replace("@CANONICAL@", canonical)
             .replace("@SYNC_CMD@", SYNC_CMD))

@@ -68,7 +68,7 @@
 - After P01 (full run): `python3 ${SKILL_DIR}/scripts/svg_quality_checker.py <project>`
 - After every 4th page (P04, P08…), **block only**: `... svg_quality_checker.py <project> --pages 2-4` (then `5-8`, `9-12`, …) — earlier pages' dispositioned findings stay closed.
 - Once on the whole project at the end (full run, no `--pages`) — this sweep owns the deck-wide contract checks.
-- Fix every `error`. Disposition each `text geometry:` warning (fix, or state the intended balanced break). Clean block = silent pass.
+- Fix every `error`. Disposition each `text geometry:` warning (fix, or state the intended balanced break). Clean block: continue to the next page; report the gate only when it found something to fix.
 
 ## 9. Then export (SKILL.md Step 7 owns it)
 - No notes → skip 7.1. finalize (7.2) deferred by default. Export: `python3 ${SKILL_DIR}/scripts/svg_to_pptx.py <project>`. Verify: `verify_deck.py <project>` + `unzip -t`, then read the `_pptx_render/<stem>-grid.png` contact sheet it renders. If it is suspicious, recommend `verify-pptx-export` and wait for explicit approval; never auto-run it. Add `--no-render` only while iterating; the final run renders.

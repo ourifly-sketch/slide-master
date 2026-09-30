@@ -527,7 +527,7 @@ The CLI iterates `items[]` with adaptive concurrency, writes `status` back per i
 | `--model` | `-m` | Default model; per-item `model` wins | Backend default |
 | `--list-backends` | - | Print support tiers and exit | — |
 
-> The single-image form `image_gen.py "prompt" --filename ...` is preserved for ad-hoc one-offs (re-rolling a single image) but is no longer the primary path.
+> The single-image form `image_gen.py "prompt" --filename ...` is for ad-hoc one-offs (re-rolling a single image); the manifest path is primary.
 
 **Configuration sources**:
 - Current process environment variables

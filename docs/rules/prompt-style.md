@@ -51,7 +51,7 @@ Role definition for the **web image acquisition path**: translate Strategist int
 | `MUST come from Z` | `It is recommended to source from Z` |
 | `Forbidden — values outside the lock` | `Anti-pattern: using values outside the lock` |
 
-**Hard rule**: if a sentence explains *why*, demote it to a single `> Note` blockquote line OR cut it. The agent does not need motivation, only behavior.
+**Hard rule**: state the behavior first; keep the reason in one clause beside it when it changes how edge cases are judged. Cut rationale that doesn't change behavior (pipeline history, motivation essays).
 
 ---
 
@@ -74,7 +74,7 @@ Begin substantive paragraphs with a bolded short label. Reuse this fixed vocabul
 
 ✅ Good (from `executor-base.md`):
 ```
-**Hard rule**: Before generating **each** SVG page, `read_file <project_path>/spec_lock.md`.
+**Hard rule**: `read_file <project_path>/spec_lock.md` before the first page of each 4-page block (P01, P05, P09, …) and after any context compaction.
 
 **Forbidden — values outside the lock**:
 - Colors (fill / stroke / stop-color) MUST come from `colors`
@@ -118,7 +118,7 @@ Bullets are fine for ≤ 3 short imperatives or a single ordered procedure.
 | Inline code (` ` `) | File paths, identifiers, env vars |
 | 2-column ✅/❌ table | Short keyword-vs-keyword contrast (one phrase per cell) |
 
-❌ Avoid: 3-column ✅/❌/(why) tables. The "why" column is explanation — drop it or move to a `>` note.
+❌ Avoid: long "why" cells in ✅/❌ tables. Keep a why column to one phrase, or move a longer reason to a `>` note.
 
 ❌ Avoid: long narrative example paragraphs. Use a code block or table.
 
@@ -159,7 +159,6 @@ Always backtick-wrap the filename in the link text.
 |---|---|
 | `🚧 **GATE**:` | Mandatory checkpoint before proceeding |
 | `⛔ **BLOCKING**:` | Must wait for explicit user confirmation |
-| `📝 **Template mapping**:` | Page-to-template declaration (Executor-specific) |
 | `> Note` blockquote | Edge case, fallback, or single-line context |
 
 Use sparingly. If every paragraph has a symbol, none of them carry weight.

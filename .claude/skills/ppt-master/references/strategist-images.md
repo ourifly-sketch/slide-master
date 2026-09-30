@@ -136,7 +136,7 @@ After the user picks a candidate (or supplies a custom variant), proceed to "Rec
 
 #### Catalog reference (for candidate construction)
 
-The tables below are source data Strategist reads when constructing the three candidates above. They are no longer the final output by themselves.
+The tables below are source data Strategist reads when constructing the three candidates above.
 
 **Rendering recommendation** (soft — user may override with any other rendering from the catalog):
 

@@ -311,13 +311,13 @@ PPT Master uses **role switching within one main agent** rather than parallel su
 
 ## Execution Discipline
 
-The pipeline is enforced by a 10-rule set in [`SKILL.md` § Global Execution Discipline](../.claude/skills/ppt-master/SKILL.md) — that file is authoritative; the rules live there. They look bureaucratic but exist because LLMs default to "let me solve the whole problem in this turn", which is exactly the wrong shape for a serial pipeline where each step's output is bounded, checkpointed, and consumed by the next. The rules collectively close failure modes that surfaced repeatedly in practice: out-of-order execution, AI proxying user design decisions, cross-phase bundling, missing prerequisites, speculative pre-work, sub-agent context loss, page-batching drift, long-deck color/font drift, batch/script-generated SVG drift, and routing ambiguity.
+The pipeline is enforced by a 10-rule set in [`SKILL.md` § Execution Discipline](../.claude/skills/ppt-master/SKILL.md) — that file is authoritative; the rules live there. They look bureaucratic but exist because LLMs default to "let me solve the whole problem in this turn", which is exactly the wrong shape for a serial pipeline where each step's output is bounded, checkpointed, and consumed by the next. The rules collectively close failure modes that surfaced repeatedly in practice: out-of-order execution, AI proxying user design decisions, cross-phase bundling, missing prerequisites, speculative pre-work, sub-agent context loss, page-batching drift, long-deck color/font drift, batch/script-generated SVG drift, and routing ambiguity.
 
 Common stop/continue recovery behavior is authoritative in [`failure-recovery.md`](../.claude/skills/ppt-master/workflows/failure-recovery.md); this section does not duplicate that matrix.
 
 Two newer rules are especially important to the architecture. First, Executor page SVGs must be hand-authored by the current main agent, one page at a time; writing a Python/Node/shell generator to emit pages is prohibited because the resulting deck loses cross-page judgment and visual continuity. Second, routing is deterministic: raw PPTX template requests, beautify requests, native enhancement, custom animation, live preview, and other workflow triggers are not turned into open-ended user route questions when the repository already defines the boundary.
 
-The Role Switching Protocol (mandated read of `references/<role>.md` before mode change) serves two reinforcing purposes: forcing fresh role instructions into context overrides drift from the previous mode, and the visible marker in the conversation transcript creates an audit trail so the user can see when the agent moved between modes — critical when reviewing why a particular decision was made.
+The Role Switching Protocol (mandated read of `references/<role>.md` before mode change) serves two reinforcing purposes: forcing fresh role instructions into context overrides drift from the previous mode, and the reference-file read itself shows in the transcript when the agent moved between modes — useful when reviewing why a particular decision was made.
 
 ---
 

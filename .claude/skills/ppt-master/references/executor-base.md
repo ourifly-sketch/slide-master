@@ -66,14 +66,9 @@ Resolve the per-page template SVG via `spec_lock.md page_layouts` (authoritative
 
 Moved to [`structured-templates.md`](./structured-templates.md) §4. Trigger: the chosen template's `design_spec.md` frontmatter declares `replication_mode: mirror` (detected once during the §1.0 batch read); SKILL.md Step 6 loads that file on every structured/mirror route. Non-mirror decks skip it.
 
-### Page-Template Mapping Declaration (Required Output)
+### Page-Template Mapping
 
-Before generating each page, output which template is used:
-
-```
-📝 **Template mapping**: `templates/03a_content_image_text.svg` (free-design routes may use "None")
-🎯 **Adherence rules / layout strategy**: [specific description]
-```
+On template routes, resolve each page's prototype from `page_layouts` before drawing (see §1.2).
 
 - **Content pages**: template defines only header/footer; content area is free
 - **No template**: allowed only on free-design or brand-only routes
@@ -215,7 +210,7 @@ Colors, fonts, and icons still come exclusively from `spec_lock.md` in both bran
 - **Default — stage each page with the style's composition geometry (may override when the content genuinely calls for a plain grid)**: an SVG page is a canvas, not a DOM. Before defaulting to stacked rounded-rect cards or uniform equal columns, pick one page-scale move from the locked visual style's §1 `Composition geometry` (a bleed shape, diagonal split, oversized numeral, orbit rings, …) to stage the page's primary zone. Card grids are one option among many, not the house layout.
 - **Reference — image-led promotional pages (not a constraint)**: for travel, venue, product-introduction, hospitality, event, real-estate, and brochure-style decks, let images define the page skeleton before placing text. Consult [`image-layout-patterns.md`](image-layout-patterns.md) §Imported Deck Patterns and prefer patterns such as `#74` TOC image-navigation cards, `#75` asymmetric chapter banners, `#77` photo mosaic with a text cell, `#78` ambient banner + evidence photo + text panel, `#79` ribbon-header image cards, and `#80` side hero image + staggered evidence cards before falling back to plain left/right image-text splits.
 - **Phased batch generation** (recommended):
-  1. **Visual Construction Phase**: generate all SVG pages sequentially for visual consistency. Use layout judgment for chart marks during the draft. **MUST embed plot-area markers** per §3.1 below on every chart page — coordinate calibration is a post-generation step (see [`workflows/verify-charts.md`](../workflows/verify-charts.md)) that depends on these markers — and **native object metadata** per §3.2 on every eligible data-chart page. **Reach for native presets** per §3.0 as you draw each page: a block arrow, chevron, banner/ribbon, callout, standard flowchart node, or star is authored through `preset_shape_svg.py` at draw time — decided by the object's intent as you create it, never by scanning finished paths, and never committed to a bare `<path>`/`<polygon>` when a preset expresses it (a gradient fill/stroke or a pattern fill is the one paint exception — keep those ordinary SVG). **First-page gate (Mandatory)**: after completing the first page, run `python3 scripts/svg_quality_checker.py <project_path>/svg_output/<first_page>.svg` and fix every error before drawing page 2 — structural violations are systematic, and a first-page error repeated deck-wide costs a whole-deck rewrite. Then re-run the gate at each milestone — after every 4th page, **block-incremental**: `--pages <block>` covering only the pages authored since the last gate (e.g. `--pages 2-4`, then `5-8`) — per SKILL.md Step 6 (clean block = silent pass; the final full sweep owns the deck-wide contract checks).
+  1. **Visual Construction Phase**: generate all SVG pages sequentially for visual consistency. Use layout judgment for chart marks during the draft. **MUST embed plot-area markers** per §3.1 below on every chart page — coordinate calibration is a post-generation step (see [`workflows/verify-charts.md`](../workflows/verify-charts.md)) that depends on these markers — and **native object metadata** per §3.2 on every eligible data-chart page. **Reach for native presets** per §3.0 as you draw each page: a block arrow, chevron, banner/ribbon, callout, standard flowchart node, or star is authored through `preset_shape_svg.py` at draw time — decided by the object's intent as you create it, never by scanning finished paths, and never committed to a bare `<path>`/`<polygon>` when a preset expresses it (a gradient fill/stroke or a pattern fill is the one paint exception — keep those ordinary SVG). **First-page gate (Mandatory)**: after completing the first page, run `python3 scripts/svg_quality_checker.py <project_path>/svg_output/<first_page>.svg` and fix every error before drawing page 2 — structural violations are systematic, and a first-page error repeated deck-wide costs a whole-deck rewrite. Then re-run the gate at each milestone — after every 4th page, **block-incremental**: `--pages <block>` covering only the pages authored since the last gate (e.g. `--pages 2-4`, then `5-8`) — per SKILL.md Step 6 (clean block: continue to the next page, reporting the gate only when it found something to fix; the final full sweep owns the deck-wide contract checks).
   2. **Quality Check Gate**: run `python3 scripts/svg_quality_checker.py <project_path>` on `svg_output/`. Any `error` (banned features, viewBox mismatch, spec_lock drift, non-PPT-safe font, etc.) MUST be fixed on the offending page before proceeding — regenerate and re-check. Address `warning`s when straightforward. On a structured deck/layout template route, PPTX-structure warnings (empty Layout, framing-only Layout, bare Master, duplicate layout keys) are never acknowledge-and-release: list each one and either fix the page/lock or state per warning why the flagged state is intended (e.g. a zero-slot cover) before proceeding. Flat free-design/brand-only routes have no Master/Layout checkpoint. Text-geometry B-class warnings (unnecessary wrap / over-width copy) are likewise never acknowledge-and-release: disposition each one — fix it (unwrap, shorten per the repair ladder, redistribute the zone, or re-break at a word boundary) or state why the flagged break is intended. Do NOT defer to after `finalize_svg.py` — finalize rewrites SVG and masks some violations.
   3. **Logic Construction Phase (opt-in)**: only when `design_spec.md §X` records a speaker-notes request — after SVGs pass the quality check, batch-generate speaker notes for narrative continuity ([`speaker-notes.md`](./speaker-notes.md)). Default `None requested` → skip; write no `notes/` files.
 
@@ -254,8 +249,8 @@ not actions or hyperlinks.
 
 **Hard rule — narrow helper scope**: the helper prints one shape fragment to
 stdout. It does not write a page or choose layout. Read the fragment and insert
-it through the normal `apply_patch` page edit; never redirect, loop, or batch it
-into `svg_output/`.
+it through a normal hand edit of the page file (Edit / `apply_patch`, whichever the
+host provides); never redirect, loop, or batch it into `svg_output/`.
 
 ### 3.1 Chart Plot-Area Marker (MANDATORY on every chart page)
 
@@ -483,7 +478,7 @@ Source of truth: `spec_lock.md typography`. Use `font_family` as default; overri
 
 If `spec_lock.md` is absent, consult [`strategist.md`](strategist.md) §g — do not invent a stack.
 
-**Hard rule**: every SVG `font-family` stack MUST resolve to pre-installed exported Latin / EA typefaces (Microsoft YaHei / SimHei / SimSun / Arial / Calibri / Segoe UI / Times New Roman / Georgia / Consolas / Courier New / Impact / Arial Black). PPTX has no runtime fallback — missing fonts degrade to Calibri.
+**Hard rule**: every SVG `font-family` stack resolves to installed export faces — on this install the locked `Pretendard` family (see [`strategist.md`](strategist.md) §g); other families only when `spec_lock.typography` declares them. PPTX has no runtime fallback — missing fonts degrade to Calibri.
 
 ---
 

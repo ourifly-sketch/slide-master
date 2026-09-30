@@ -38,21 +38,21 @@ enhancement do not load or inherit this file.
 
 **MUST — page-design closure**: For an SVG-authoring route, inspect the final page SVG to determine what the exported slide looks like. Do not reinterpret “SVG is the page-design language” as “SVG is the complete PPTX package description language.”
 
-> [!CAUTION]
-> ## 🚨 Global Execution Discipline (MANDATORY)
+> [!IMPORTANT]
+> ## Execution Discipline
 >
-> **This workflow is a strict serial pipeline. The following rules have the highest priority — violating any one of them constitutes execution failure:**
+> **The pipeline is serial; these rules hold for every run:**
 >
-> 1. **SERIAL EXECUTION** — Steps MUST be executed in order; the output of each step is the input for the next. Non-BLOCKING adjacent steps may proceed continuously once prerequisites are met, without waiting for the user to say "continue"
-> 2. **BLOCKING = HARD STOP** — Steps marked ⛔ BLOCKING require a full stop; the AI MUST wait for an explicit user response before proceeding and MUST NOT make any decisions on behalf of the user
-> 3. **NO CROSS-PHASE BUNDLING** — Cross-phase bundling is FORBIDDEN. (Note: the Strategist confirmation stage in Step 4 is ⛔ BLOCKING — the AI MUST present recommendations and wait for explicit user confirmation before proceeding. Once the user confirms, all subsequent non-BLOCKING steps — design spec output, SVG generation, speaker notes, and post-processing — may proceed automatically without further user confirmation)
-> 4. **GATE BEFORE ENTRY** — Each Step has prerequisites (🚧 GATE) listed at the top; these MUST be verified before starting that Step
-> 5. **NO SPECULATIVE EXECUTION** — "Pre-preparing" content for subsequent Steps is FORBIDDEN (e.g., writing SVG code during the Strategist phase)
-> 6. **NO SUB-AGENT SVG GENERATION** — Executor Step 6 SVG generation is context-dependent and MUST be completed by the current main agent end-to-end. Delegating page SVG generation to sub-agents is FORBIDDEN
-> 7. **SEQUENTIAL PAGE GENERATION ONLY** — In Executor Step 6, after the global design context is confirmed, SVG pages MUST be generated sequentially page by page in one continuous pass. Grouped page batches (for example, 5 pages at a time) are FORBIDDEN
-> 8. **SPEC_LOCK MILESTONE RE-READ** — Executor MUST `read_file <project_path>/spec_lock.md` before the first page of each 4-page block (P01, P05, P09, …) and immediately after any context compaction. All colors / fonts / icons / images MUST come from this file — no values from memory or invented on the fly; between re-reads the in-context copy from the last read is the working reference. Executor MUST also read `pptx_structure.mode`, the current page's `page_rhythm` (`anchor` / `dense` / `breathing`), and `page_charts`. Only a deck/layout template route (`mode: structured`) looks up `page_layouts` (the input template SVG), `pptx_masters`, `pptx_layouts`, and `template_adherence`; free-design and brand-only routes use `mode: flat` and omit those sections. This rule exists to resist context-compression drift on long decks and to break the uniform "every page is a card grid" default
-> 9. **SVG MUST BE HAND-WRITTEN, NOT SCRIPT-GENERATED** — Every SVG page is written by the main agent directly, one page at a time (see rules 6 and 7). Writing or running a Python / Node / shell script that produces the SVG files in batch — looping over pages, templating from data, or emitting them via a generator — is FORBIDDEN, including under "save tokens", "quick draft", or "user is in a hurry" pretexts. The script-generation path was tried on a feature branch and abandoned: cross-page visual consistency depends on per-page authoring with full upstream context, which a generator script cannot reproduce. **Narrow exception**: `preset_shape_svg.py` may print one deterministic stock-shape fragment to stdout after the main agent has selected its semantic role, frame, and paint. It cannot write `svg_output/`, choose layout, batch shapes, or generate a page; the main agent reads the fragment and inserts it through the normal hand-authored page edit
-> 10. **FOLLOW DETERMINISTIC ROUTING RULES** — Do not add blocking routing questions when this skill defines a route. If the user request violates a route precondition, state the required prerequisite and stop that route instead of asking the user to choose around the rule. Ordinary finite options, stylistic preferences, and recoverable details are surfaced with a recommended value plus alternatives at the next existing confirmation gate.
+> 1. **Serial execution** — Run steps in order; the output of each step is the input for the next. Non-BLOCKING adjacent steps may proceed continuously once prerequisites are met, without waiting for the user to say "continue"
+> 2. **BLOCKING = stop** — At a step marked ⛔ BLOCKING, stop and wait for an explicit user response before proceeding; do not make decisions on the user's behalf there
+> 3. **No cross-phase bundling** — Do not bundle work across phases. (Note: the Strategist confirmation stage in Step 4 is ⛔ BLOCKING — present recommendations and wait for explicit user confirmation before proceeding. Once the user confirms, all subsequent non-BLOCKING steps — design spec output, SVG generation, speaker notes, and post-processing — may proceed automatically without further user confirmation)
+> 4. **Gate before entry** — Each Step lists its prerequisites (🚧 GATE) at the top; verify them before starting that Step
+> 5. **No speculative execution** — Do not pre-prepare content for later Steps (e.g., writing SVG code during the Strategist phase)
+> 6. **No sub-agent SVG generation** — Executor Step 6 SVG generation is context-dependent, so the current main agent completes it end-to-end; do not delegate page SVG generation to sub-agents
+> 7. **Sequential page generation** — In Executor Step 6, after the global design context is confirmed, generate SVG pages sequentially page by page in one continuous pass, not in grouped batches (for example, 5 pages at a time)
+> 8. **spec_lock milestone re-read** — Executor runs `read_file <project_path>/spec_lock.md` before the first page of each 4-page block (P01, P05, P09, …) and immediately after any context compaction. All colors / fonts / icons / images come from this file — no values from memory or invented on the fly; between re-reads the in-context copy from the last read is the working reference. Executor also reads `pptx_structure.mode`, the current page's `page_rhythm` (`anchor` / `dense` / `breathing`), and `page_charts`. Only a deck/layout template route (`mode: structured`) looks up `page_layouts` (the input template SVG), `pptx_masters`, `pptx_layouts`, and `template_adherence`; free-design and brand-only routes use `mode: flat` and omit those sections. This rule exists to resist context-compression drift on long decks and to break the uniform "every page is a card grid" default
+> 9. **Hand-written SVG, not script-generated** — Write each page SVG by hand in the main agent, one page at a time (see rules 6 and 7). Do not write or run a Python / Node / shell script that produces the SVG files in batch — looping over pages, templating from data, or emitting them via a generator — cross-page visual consistency depends on per-page authoring with full upstream context, which a generator script cannot reproduce. **Narrow exception**: `preset_shape_svg.py` may print one deterministic stock-shape fragment to stdout after the main agent has selected its semantic role, frame, and paint. It cannot write `svg_output/`, choose layout, batch shapes, or generate a page; the main agent reads the fragment and inserts it through the normal hand-authored page edit
+> 10. **Follow deterministic routing rules** — Do not add blocking routing questions when this skill defines a route. If the user request violates a route precondition, state the required prerequisite and stop that route instead of asking the user to choose around the rule. Ordinary finite options, stylistic preferences, and recoverable details are surfaced with a recommended value plus alternatives at the next existing confirmation gate.
 
 > [!IMPORTANT]
 > ## 🌐 Language & Communication Rule
@@ -538,7 +538,7 @@ python3 ${SKILL_DIR}/scripts/analyze_images.py <project_path>/images
 
 > 🔁 **Image facts are regenerated on demand, never a durable store.** `images/` is a live working folder — pictures are extracted from the source at import, the user may drop or replace files at any time, and Step 5 writes web/AI images into it. The single source of truth is therefore the **current contents of `images/`**, and `analysis/image_analysis.csv` is a *regenerated view* of it, not a fact to keep in sync. Re-run `analyze_images.py <project_path>/images` immediately **before any step that reads image facts** so the view reflects the live folder: before the §h image-usage recommendation (see [strategist.md](references/strategist.md) §h), here before authoring §VIII, after Step 5 acquisition (so web/AI files join the view), and again any time the user says they added or replaced images. This is the staleness strategy — re-derive on use, no cache to invalidate.
 
-> ⚠️ **Image handling**: NEVER directly read / open / view image files (`.jpg`, `.png`, etc.). All image info comes from `analyze_images.py` output (`analysis/image_analysis.csv`) or the Design Spec's Image Resource List.
+> **Image facts**: take size / ratio / category for `images/` assets from `analysis/image_analysis.csv` (regenerated on use) or the Design Spec's Image Resource List rather than inspecting source files, so every step shares one fact view. Rendered review files (`.preview/`, `_pptx_render/`, `images/.review/`) are meant to be read.
 
 **Early background image launch (Mandatory when the confirmed `image_usage` includes `ai` and/or `web`)**: acquisition wall-clock must overlap spec writing, not block Step 6. Fix the §VIII image resource plan first — rows, filenames, per-row intent — then launch acquisition as background processes and keep authoring while they run:
 
@@ -711,7 +711,7 @@ Do not duplicate specialized identity with `data-pptx-role`. Add it only to stru
 python3 ${SKILL_DIR}/scripts/svg_quality_checker.py <project_path>                    # P01 gate: full run (whole deck = 1 page; contract checks included)
 python3 ${SKILL_DIR}/scripts/svg_quality_checker.py <project_path> --pages 2-4        # later gates: ONLY the block authored since the last gate (5-8, 9-12, …)
 ```
-The page-1 run is the strictest instance — structural violations are systematic, and a first-page error repeated deck-wide costs a whole-deck rewrite; fix every error before drawing page 2. Each later run is **incremental**: `--pages` re-checks only the block authored since the last gate, so already-dispositioned earlier-page findings are not re-surfaced (deck-wide contract checks defer to the final full sweep below). Fix every `error` while the block's context is hot, and disposition each `text geometry:` warning immediately (same one-line disposition contract as the deck-wide gate below). **Clean block = silent pass**: no error and no text-geometry warning → move straight on, no disposition lines, no summary, no commentary. Repair scope stays ≤4 hot pages; the deck-wide sweep and the checker's spec-lock drift check backstop the gaps.
+The page-1 run is the strictest instance — structural violations are systematic, and a first-page error repeated deck-wide costs a whole-deck rewrite; fix every error before drawing page 2. Each later run is **incremental**: `--pages` re-checks only the block authored since the last gate, so already-dispositioned earlier-page findings are not re-surfaced (deck-wide contract checks defer to the final full sweep below). Fix every `error` while the block's context is hot, and disposition each `text geometry:` warning immediately (same one-line disposition contract as the deck-wide gate below). **Clean block**: continue to the next page; report the gate only when it found something to fix. Repair scope stays ≤4 hot pages; the deck-wide sweep and the checker's spec-lock drift check backstop the gaps.
 
 **Quality Check Gate (Mandatory)** — after all SVGs, BEFORE annotation handling and speaker notes (with the milestone gate in force this is a parity sweep — expect only cross-page or late-edit findings; any residual finding still follows the rules below):
 ```bash
@@ -747,7 +747,7 @@ The Step 6 live-preview server is already running — pass its actual URL from t
 - [x] Speaker notes generated at notes/total.md (only when requested; skipped by default)
 ```
 
-> **Chart pages?** If this deck contains data charts (bar / line / pie / radar / etc.), run the standalone [`verify-charts`](workflows/verify-charts.md) workflow before Step 7 to calibrate coordinates. AI models routinely introduce 10–50 px errors when mapping data to pixel positions; verify-charts eliminates that class of error. Skip if no chart pages.
+> **Chart pages?** If this deck contains data charts (bar / line / pie / radar / etc.), run the standalone [`verify-charts`](workflows/verify-charts.md) workflow before Step 7 to calibrate coordinates. Hand-placed chart marks drift from the data; verify-charts recomputes coordinates from the values. Skip if no chart pages.
 
 > **Visual self-check (opt-in)?** If the user explicitly asked for a per-page visual re-pass on the SVGs ("跑一下视觉自检 / 视觉回看", "visual review", "check pages visually", etc.), run the standalone [`visual-review`](workflows/visual-review.md) workflow before Step 7. Do NOT run it by default and do NOT recommend it based on inferred model capability or deck size — trigger is user request only.
 
@@ -993,13 +993,7 @@ python3 ${SKILL_DIR}/scripts/verify_deck.py <project_path>
 
 ## Role Switching Protocol
 
-Before switching roles, **MUST first read** the corresponding reference file. Output marker:
-
-```markdown
-## [Role Switch: <Role Name>]
-📖 Reading role definition: references/<filename>.md
-📋 Current task: <brief description>
-```
+Read the role's reference file before acting in that role.
 
 ---
 

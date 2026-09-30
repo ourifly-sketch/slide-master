@@ -73,37 +73,27 @@ If any page comes back with `"all_background": true` in the JSON summary, that p
 
 ---
 
-## Step 2 — Spawn the review team
+## Step 2 — Dispatch the review batches
 
-Create a team and dispatch one orchestrator agent. The orchestrator partitions the N pages into batches of ≤ K pages (default **K = 5**) and spawns one subagent per batch **in parallel** (single message, `ceil(N/K)` parallel `Agent` calls). Each batch subagent reads the fixed inputs (rubric + `design_spec.md` + `spec_lock.md`) **once**, then iterates over its assigned pages sequentially.
+You (the main agent) act as the orchestrator. Partition the N pages into batches of ≤ K pages (default **K = 5**) and spawn one `Agent` per batch **in parallel** (single message, `ceil(N/K)` parallel `Agent` calls, `subagent_type="general-purpose"`). Each batch subagent reads the fixed inputs (rubric + `design_spec.md` + `spec_lock.md`) **once**, iterates over its assigned pages sequentially, and returns its batch report as its final message.
 
-```text
-TeamCreate(team_name="visual-review-<project>", agent_type="orchestrator")
-Agent(
-  team_name="visual-review-<project>",
-  subagent_type="general-purpose",
-  name="orchestrator",
-  prompt=<orchestrator-prompt>,
-)
-```
-
-The orchestrator prompt must be self-contained and is the **single** place where dispatch shape, batch size, and forbid lists are stated — the rubric (`references/visual-review.md`) defines the contract those prompts must satisfy. Required fields (all absolute paths):
+Each batch prompt must be self-contained; the rubric (`references/visual-review.md`) defines the contract those prompts must satisfy. Run parameters and required prompt fields (all absolute paths):
 
 - `<project_path>` — project root
 - Full page list with `page_role` per page (parse `<project>/design_spec.md` §IX outline; if §IX is absent, default every page to `content` and flag this in the final report)
 - Batch size `K` (default 5; raise to 10 for token-sensitive runs on large decks, lower to 3 for high-fidelity short decks — see rubric §6.1)
 - Iteration budget per page (default 1; 2 only for high-stakes / final-cut runs — see [Appendix: Iteration loop](#appendix-iteration-loop-opt-in))
 - Path to the rubric: `.claude/skills/ppt-master/references/visual-review.md`
-- Dispatch contract reference: rubric [§6](../references/visual-review.md#6-dispatch--messaging-contract) (batched parallel spawn, self-contained prompts, mandatory `SendMessage` on idle, anonymous-name tolerance)
+- Dispatch contract reference: rubric [§6](../references/visual-review.md#6-dispatch--messaging-contract) (batched parallel spawn, self-contained prompts, batch report as the final message)
 - Subagent forbid list: do not edit any other page, `design_spec.md`, `spec_lock.md`, `animations.json`, `image_prompts.json`, or `images/`
 
-**Host compatibility**: `TeamCreate` and `SendMessage` are Claude-Code-specific multi-agent primitives. On hosts without those primitives (Cursor, VS Code + Copilot, Codebuddy, etc.) the main agent processes batches sequentially — same partitioning, same per-batch prompts, no parallel dispatch. Token savings from shared fixed inputs still apply; wall-clock time grows roughly N/K-fold.
+**Host compatibility**: hosts without a sub-agent tool (Cursor, VS Code + Copilot, Codebuddy, etc.) process the batches sequentially in the main agent — same partitioning, same per-batch prompts, no parallel dispatch. Token savings from shared fixed inputs still apply; wall-clock time grows roughly N/K-fold.
 
 ---
 
 ## Step 3 — Aggregate findings
 
-The orchestrator emits the aggregate Markdown table back to you (the main agent):
+Aggregate the batch reports into one Markdown table:
 
 ```
 | page | role | status | hard_hits | soft_hits | fixes_applied | needs_human_reason |
@@ -169,4 +159,4 @@ Default behavior is single-iteration review: one scan, fix in place, write the r
 3. Iteration 2: re-verify changed elements + scan for new Hard hits
 4. Rollback on any new Hard hit introduced by a fix
 
-To enable, set iteration budget = 2 in the orchestrator prompt (this is a prompt-level instruction to subagents; neither `visual_review.py` nor the harness enforces it). Each added iteration roughly doubles render cost and triples token cost on the affected pages — reserve for final-cut runs only.
+To enable, set iteration budget = 2 in the batch prompts (this is a prompt-level instruction to subagents; neither `visual_review.py` nor the harness enforces it). Each added iteration roughly doubles render cost and triples token cost on the affected pages — reserve for final-cut runs only.
